@@ -1,0 +1,2 @@
+ChessCompetition (Schachwettkampf)
+==================================
