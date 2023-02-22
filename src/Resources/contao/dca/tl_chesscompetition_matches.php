@@ -120,7 +120,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 		),
 		'pid' => array
 		(
-			'foreignKey'              => 'tl_ergebnisdienst_staffeln.title',
+			'foreignKey'              => 'tl_chesscompetition.title',
 			'sql'                     => "int(10) unsigned NOT NULL default '0'",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'eager')
 		),
