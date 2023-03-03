@@ -43,7 +43,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'disableGrouping'         => true,
 			'headerFields'            => array('title', 'fromDate', 'toDate', 'place', 'country'),
 			'panelLayout'             => 'filter;sort,search,limit',
-			'child_record_callback'   => array('tl_chesscompetition_matches', 'listMatches'),  
+			'child_record_callback'   => array('tl_chesscompetition_matches', 'listMatches'),
 		),
 		'global_operations' => array
 		(
@@ -91,10 +91,17 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			),
 			'toggle' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['toggle'],
-				'icon'                => 'visible.gif',
-				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
-				'button_callback'     => array('tl_chesscompetition_matches', 'toggleIcon')
+				'label'                => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['toggle'],
+				'attributes'           => 'onclick="Backend.getScrollOffset()"',
+				'haste_ajax_operation' => array
+				(
+					'field'            => 'published',
+					'options'          => array
+					(
+						array('value' => '', 'icon' => 'invisible.svg'),
+						array('value' => '1', 'icon' => 'visible.svg'),
+					),
+				),
 			),
 			'show' => array
 			(
@@ -139,12 +146,12 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'eval'                    => array
 			(
 				'includeBlankOption'  => true,
-				'mandatory'           => false, 
+				'mandatory'           => false,
 				'maxlength'           => 5,
 				'tl_class'            => 'w50'
 			),
 			'sql'                     => "varchar(5) NOT NULL default ''"
-		), 
+		),
 		'germanTeam' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['germanTeam'],
@@ -171,12 +178,12 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'options'                 => System::getCountries(),
 			'eval'                    => array
 			(
-				'includeBlankOption'  => true, 
-				'chosen'              => true, 
+				'includeBlankOption'  => true,
+				'chosen'              => true,
 				'tl_class'            => 'w50'
 			),
 			'sql'                     => "varchar(2) NOT NULL default ''"
-		),  
+		),
 		'opponentTeam' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['opponentTeam'],
@@ -202,12 +209,12 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'options'                 => System::getCountries(),
 			'eval'                    => array
 			(
-				'includeBlankOption'  => true, 
-				'chosen'              => true, 
+				'includeBlankOption'  => true,
+				'chosen'              => true,
 				'tl_class'            => 'w50'
 			),
 			'sql'                     => "varchar(2) NOT NULL default ''"
-		),  
+		),
 		'home' => array
 		(
 			'label'                 => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['home'],
@@ -218,7 +225,8 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array
 			(
-				'doNotCopy'           => true
+				'doNotCopy'           => true,
+				'tl_class'            => 'w50'
 			),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
@@ -231,12 +239,12 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'inputType'               => 'text',
 			'eval'                    => array
 			(
-				'mandatory'           => false, 
+				'mandatory'           => false,
 				'maxlength'           => 10,
 				'tl_class'            => 'w50'
 			),
 			'sql'                     => "varchar(10) NOT NULL default ''"
-		), 
+		),
 		'resultOpponent' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['resultOpponent'],
@@ -246,7 +254,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'inputType'               => 'text',
 			'eval'                    => array
 			(
-				'mandatory'           => false, 
+				'mandatory'           => false,
 				'maxlength'           => 10,
 				'tl_class'            => 'w50'
 			),
@@ -261,7 +269,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'eval'                    => array('rte'=>'tinyMCE', 'helpwizard'=>true, 'tl_class'=>'clr'),
 			'explanation'             => 'insertTags',
 			'sql'                     => "mediumtext NULL"
-		),  
+		),
 		'source' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['source'],
@@ -270,7 +278,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'long'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
-		), 
+		),
 		'round' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['round'],
@@ -278,13 +286,13 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'inputType'               => 'text',
 			'eval'                    => array
 			(
-				'rgxp'                => 'digit', 
-				'tl_class'            => 'w50 clr', 
-				'mandatory'           => true, 
+				'rgxp'                => 'digit',
+				'tl_class'            => 'w50 clr',
+				'mandatory'           => false,
 				'maxlength'           => 2
 			),
 			'sql'                     => "smallint(2) unsigned NOT NULL default '0'"
-		), 
+		),
 		'pairing' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['pairing'],
@@ -292,13 +300,13 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'inputType'               => 'text',
 			'eval'                    => array
 			(
-				'rgxp'                => 'digit', 
-				'tl_class'            => 'w50', 
-				'mandatory'           => true, 
+				'rgxp'                => 'digit',
+				'tl_class'            => 'w50',
+				'mandatory'           => false,
 				'maxlength'           => 2
 			),
 			'sql'                     => "smallint(2) unsigned NOT NULL default '0'"
-		), 
+		),
 		'eventDate' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['eventDate'],
@@ -320,7 +328,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 				array('tl_chesscompetition_matches', 'putDate')
 			),
 			'sql'                     => "int(8) unsigned NOT NULL default '0'"
-		), 
+		),
 		'eventTime' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['eventTime'],
@@ -331,13 +339,13 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'inputType'               => 'text',
 			'eval'                    => array
 			(
-				'rgxp'                => 'time', 
-				'mandatory'           => false, 
-				'doNotCopy'           => false, 
+				'rgxp'                => 'time',
+				'mandatory'           => false,
+				'doNotCopy'           => false,
 				'tl_class'            => 'w50'
 			),
 			'sql'                     => "int(10) unsigned NULL"
-		), 
+		),
 		'place' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['place'],
@@ -348,11 +356,11 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'inputType'               => 'text',
 			'eval'                    => array
 			(
-				'mandatory'           => false, 
+				'mandatory'           => false,
 				'maxlength'           => 255
 			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
-		), 
+		),
 		'referee' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['referee'],
@@ -363,11 +371,11 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'inputType'               => 'text',
 			'eval'                    => array
 			(
-				'mandatory'           => false, 
+				'mandatory'           => false,
 				'maxlength'           => 255
 			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
-		), 
+		),
 		'complete' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_matches']['complete'],
@@ -377,7 +385,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 			'default'                 => false,
 			'inputType'               => 'checkbox',
 			'sql'                     => "char(1) NOT NULL default ''"
-		),  
+		),
 		// Paarung veröffentlicht
 		'published' => array
 		(
@@ -392,7 +400,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_matches'] = array
 				'doNotCopy'           => true
 			),
 			'sql'                     => "char(1) NOT NULL default ''"
-		), 
+		),
 	)
 );
 
@@ -409,7 +417,7 @@ class tl_chesscompetition_matches extends Backend
 {
 
 	var $nummer = 0;
-	
+
 	/**
 	 * Import the back end user object
 	 */
@@ -451,11 +459,11 @@ class tl_chesscompetition_matches extends Backend
 		$temp .= $arrRow['complete'] ? $this->generateImage('ok.gif', 'Länderkampf komplett') : $this->generateImage('delete.gif', 'Länderkampf nicht komplett');
 		$temp .= ' <b>['.$arrRow['round'].']</b> <i>'.$this->getDate($arrRow['eventDate']).'</i>';
 		// Mannschaftsnamen bauen
-		($arrRow['home']) ? $temp .= ' <b>' . $arrRow['germanTeam'] : $temp .= ' <b>' . $arrRow['opponentTeam']; 
-		($arrRow['home']) ? $temp .= ' - ' . $arrRow['opponentTeam'].'</b>' : $temp .= ' - ' . $arrRow['germanTeam'].'</b>'; 
-		// Ergebnis bauen		
-		($arrRow['home']) ? $temp .= ' ' . $arrRow['resultGerman'] : $temp .= ' ' . $arrRow['resultOpponent']; 
-		($arrRow['home']) ? $temp .= ':' . $arrRow['resultOpponent'] : $temp .= ':' . $arrRow['resultGerman']; 
+		($arrRow['home']) ? $temp .= ' <b>' . $arrRow['germanTeam'] : $temp .= ' <b>' . $arrRow['opponentTeam'];
+		($arrRow['home']) ? $temp .= ' - ' . $arrRow['opponentTeam'].'</b>' : $temp .= ' - ' . $arrRow['germanTeam'].'</b>';
+		// Ergebnis bauen
+		($arrRow['home']) ? $temp .= ' ' . $arrRow['resultGerman'] : $temp .= ' ' . $arrRow['resultOpponent'];
+		($arrRow['home']) ? $temp .= ':' . $arrRow['resultOpponent'] : $temp .= ':' . $arrRow['resultGerman'];
 		return $temp.'</div>';
 	}
 
@@ -524,74 +532,6 @@ class tl_chesscompetition_matches extends Backend
 			'J'    => 'Jugend-Länderkampf',
 		);
 		return $arrForms;
-	}
-
-	/**
-	 * Ändert das Aussehen des Toggle-Buttons.
-	 * @param $row
-	 * @param $href
-	 * @param $label
-	 * @param $title
-	 * @param $icon
-	 * @param $attributes
-	 * @return string
-	 */
-	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
-	{
-		$this->import('BackendUser', 'User');
-		
-		if (strlen($this->Input->get('tid')))
-		{
-			$this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 0));
-			$this->redirect($this->getReferer());
-		}
-		
-		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_chesscompetition_matches::published', 'alexf'))
-		{
-			return '';
-		}
-		
-		$href .= '&amp;id='.$this->Input->get('id').'&amp;tid='.$row['id'].'&amp;state='.$row[''];
-		
-		if (!$row['published'])
-		{
-			$icon = 'invisible.gif';
-		}
-		
-		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
-	}
-
-	/**
-	 * Toggle the visibility of an element
-	 * @param integer
-	 * @param boolean
-	 */
-	public function toggleVisibility($intId, $blnPublished)
-	{
-		// Check permissions to publish
-		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_chesscompetition_matches::published', 'alexf'))
-		{
-			$this->log('Not enough permissions to show/hide record ID "'.$intId.'"', 'tl_chesscompetition_matches toggleVisibility', TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
-		}
-		
-		$this->createInitialVersion('tl_chesscompetition_matches', $intId);
-		
-		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_chesscompetition_matches']['fields']['published']['save_callback']))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_chesscompetition_matches']['fields']['published']['save_callback'] as $callback)
-			{
-				$this->import($callback[0]);
-				$blnPublished = $this->$callback[0]->$callback[1]($blnPublished, $this);
-			}
-		}
-		
-		// Update the database
-		$this->Database->prepare("UPDATE tl_chesscompetition_matches SET tstamp=". time() .", published='" . ($blnPublished ? '' : '1') . "' WHERE id=?")
-		     ->execute($intId);
-		$this->createNewVersion('tl_chesscompetition_matches', $intId);
 	}
 
 }

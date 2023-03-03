@@ -54,7 +54,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_players'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_chesscompetition_players']['competitions'],
 				'href'                => 'table=tl_chesscompetition',
-				'icon'                => 'system/modules/chesscompetition/assets/images/icon.png',
+				'icon'                => 'bundles/contaochesscompetition/images/icon.png',
 			),  
 			'all' => array
 			(
@@ -93,9 +93,17 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_players'] = array
 			),
 			'toggle' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_chesscompetition_players']['toggle'],
-				'icon'                => 'visible.gif',
-				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+				'label'                => &$GLOBALS['TL_LANG']['tl_chesscompetition_players']['toggle'],
+				'attributes'           => 'onclick="Backend.getScrollOffset()"',
+				'haste_ajax_operation' => array
+				(
+					'field'            => 'published',
+					'options'          => array
+					(
+						array('value' => '', 'icon' => 'invisible.svg'),
+						array('value' => '1', 'icon' => 'visible.svg'),
+					),
+				),
 			),
 			'show' => array
 			(
@@ -110,7 +118,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_players'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'death', 'descendant'),
-		'default'                     => '{title_legend},firstname,lastname,title,alias,nationalPlayer;{live_legend:hide},birthday,death;{games_legend:hide},games_count,games_date;{descendant_legend:hide},descendant;{image_legend:hide},addImage;{info_legend:hide},info;{publish_legend},published'
+		'default'                     => '{title_legend},firstname,lastname,title,alias,nationalPlayer;{life_legend:hide},birthday,death;{games_legend:hide},games_count,games_date;{descendant_legend:hide},descendant;{image_legend:hide},addImage;{info_legend:hide},info;{publish_legend},published'
 	),
 
 	// Unterpaletten
@@ -193,6 +201,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_players'] = array
 			'inputType'               => 'checkbox',
 			'eval'                    => array
 			(
+				'tl_class'            => 'w50',
 				'doNotCopy'           => false
 			),
 			'sql'                     => "char(1) NOT NULL default ''"
@@ -359,7 +368,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_players'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'sql'                     => "varchar(12) NOT NULL default ''"
 		), 
-		// Anzahl der Länderkämpfe aus dem externem Import
+		// Anzahl der LÃ¤nderkÃ¤mpfe aus dem externem Import
 		'games_count' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_players']['games_count'],
@@ -369,7 +378,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_players'] = array
 			'eval'                    => array('maxlength'=>4, 'tl_class'=>'w50'),
 			'sql'                     => "int(4) unsigned NOT NULL default '0'"
 		),
-		// Datum der Länderkämpfe aus dem externem Import
+		// Datum der LÃ¤nderkÃ¤mpfe aus dem externem Import
 		'games_date' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_chesscompetition_players']['games_date'],
@@ -451,11 +460,11 @@ class tl_chesscompetition_players extends Backend
 		if ($varValue == '')
 		{
 			$autoAlias = true;
-			$varValue = standardize(String::restoreBasicEntities($dc->activeRecord->lastname.'-'.$dc->activeRecord->firstname));
+			$varValue = standardize(\StringUtil::restoreBasicEntities($dc->activeRecord->lastname.'-'.$dc->activeRecord->firstname));
 		}
 
-		$objAlias = $this->Database->prepare("SELECT id FROM tl_chesscompetition WHERE alias=?")
-								   ->execute($varValue);
+		$objAlias = \Database::getInstance()->prepare("SELECT id FROM tl_chesscompetition_players WHERE alias=?")
+		                                    ->execute($varValue);
 
 		// Check whether the news alias exists
 		if ($objAlias->numRows > 1 && !$autoAlias)
@@ -500,7 +509,7 @@ class tl_chesscompetition_players extends Backend
 	}
 
 	/**
-	 * Datumswert für Datenbank umwandeln
+	 * Datumswert fÃ¼r Datenbank umwandeln
 	 * @param mixed
 	 * @return mixed
 	 */

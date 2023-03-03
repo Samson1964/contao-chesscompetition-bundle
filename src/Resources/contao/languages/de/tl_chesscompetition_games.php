@@ -19,6 +19,8 @@ $GLOBALS['TL_LANG']['tl_chesscompetition_games']['germanColor'] = array('Farbe d
 $GLOBALS['TL_LANG']['tl_chesscompetition_games']['results_legend'] = 'Ergebnis';
 $GLOBALS['TL_LANG']['tl_chesscompetition_games']['result'] = array('Ergebnis', 'Ergebnis aus Sicht des deutschen Spielers');
 $GLOBALS['TL_LANG']['tl_chesscompetition_games']['board'] = array('Brett', 'Nummer des Brettes');
+
+$GLOBALS['TL_LANG']['tl_chesscompetition_games']['info_legend'] = 'Informationen';
 $GLOBALS['TL_LANG']['tl_chesscompetition_games']['info'] = array('Information', 'Informationen zur Partie');
 $GLOBALS['TL_LANG']['tl_chesscompetition_games']['source'] = array('Quelle', 'Quelle der Daten dieser Partie');
 
@@ -33,23 +35,10 @@ $GLOBALS['TL_LANG']['tl_chesscompetition_games']['published'] = array('Veröffen
  * Buttons für Operationen
  */
 
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['competitions'][0] = 'Wettbewerbe';
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['competitions'][1] = 'Wettbewerbsverwaltung aufrufen';
-
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['new'][0] = 'Neue Partie';
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['new'][1] = 'Neue Partie anlegen';
-
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['edit'][0] = 'Partie bearbeiten';
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['edit'][1] = 'Partie %s bearbeiten';
-
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['copy'][0] = 'Partie kopieren';
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['copy'][1] = 'Partie %s kopieren';
-
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['delete'][0] = 'Partie löschen';
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['delete'][1] = 'Partie %s löschen';
-
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['toggle'][0] = 'Partie aktivieren/deaktivieren';
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['toggle'][1] = 'Partie %s aktivieren/deaktivieren';
-
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['show'][0] = 'Partiedetails anzeigen';
-$GLOBALS['TL_LANG']['tl_chesscompetition_games']['show'][1] = 'Details der Partie %s anzeigen';
+$GLOBALS['TL_LANG']['tl_chesscompetition_games']['competitions'] = array('Wettbewerbe', 'Wettbewerbsverwaltung aufrufen');
+$GLOBALS['TL_LANG']['tl_chesscompetition_games']['new'] = array('Neue Partie', 'Neue Partie anlegen');
+$GLOBALS['TL_LANG']['tl_chesscompetition_games']['edit'] = array('Partie bearbeiten', 'Partie %s bearbeiten');
+$GLOBALS['TL_LANG']['tl_chesscompetition_games']['copy'] = array('Partie kopieren', 'Partie %s kopieren');
+$GLOBALS['TL_LANG']['tl_chesscompetition_games']['delete'] = array('Partie löschen', 'Partie %s löschen');
+$GLOBALS['TL_LANG']['tl_chesscompetition_games']['toggle'] = array('Partie aktivieren/deaktivieren', 'Partie %s aktivieren/deaktivieren');
+$GLOBALS['TL_LANG']['tl_chesscompetition_games']['show'] = array('Partiedetails anzeigen', 'Details der Partie %s anzeigen');

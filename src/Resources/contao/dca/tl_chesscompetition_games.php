@@ -83,10 +83,17 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_games'] = array
 			),
 			'toggle' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_chesscompetition_games']['toggle'],
-				'icon'                => 'visible.gif',
-				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
-				'button_callback'     => array('tl_chesscompetition_games', 'toggleIcon')
+				'label'                => &$GLOBALS['TL_LANG']['tl_chesscompetition_games']['toggle'],
+				'attributes'           => 'onclick="Backend.getScrollOffset()"',
+				'haste_ajax_operation' => array
+				(
+					'field'            => 'published',
+					'options'          => array
+					(
+						array('value' => '', 'icon' => 'invisible.svg'),
+						array('value' => '1', 'icon' => 'visible.svg'),
+					),
+				),
 			),
 			'show' => array
 			(
@@ -100,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_games'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{player_legend},germanPlayer,opponentPlayer,germanRating,opponentRating,germanTitle,opponentTitle,germanColor;{results_legend:hide},result,board,info,source;{pgn_legend},pgn;{publish_legend},complete,published'
+		'default'                     => '{player_legend},germanPlayer,opponentPlayer,germanRating,opponentRating,germanTitle,opponentTitle,germanColor;{results_legend:hide},result,board;{info_legend:hide},info,source;{pgn_legend},pgn;{publish_legend},complete,published'
 	),
 
 	// Fields
@@ -219,7 +226,8 @@ $GLOBALS['TL_DCA']['tl_chesscompetition_games'] = array
 			'options_callback'        => array('tl_chesscompetition_games', 'getColours'),
 			'eval'                    => array
 			(
-				'includeBlankOption'  => true
+				'includeBlankOption'  => true,
+				'tl_class'            => 'w50'
 			),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
@@ -445,7 +453,7 @@ class tl_chesscompetition_games extends Backend
 		$arrForms = array();
 		$objForms = $this->Database->prepare("SELECT id, firstname, lastname FROM tl_chesscompetition_players WHERE nationalPlayer = ? ORDER BY alias")->execute(1);
 
-		while ($objForms->next())
+		while($objForms->next())
 		{
 			$arrForms[$objForms->id] = $objForms->lastname .', '.$objForms->firstname. ' (ID ' . $objForms->id . ')';
 		}
@@ -506,74 +514,6 @@ class tl_chesscompetition_games extends Backend
 			's'   => 'Schwarz'
 		);
 		return $arrForms;
-	}
-
-	/**
-	 * Ändert das Aussehen des Toggle-Buttons.
-	 * @param $row
-	 * @param $href
-	 * @param $label
-	 * @param $title
-	 * @param $icon
-	 * @param $attributes
-	 * @return string
-	 */
-	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
-	{
-		$this->import('BackendUser', 'User');
-		
-		if (strlen($this->Input->get('tid')))
-		{
-			$this->toggleVisibility($this->Input->get('tid'), ($this->Input->get('state') == 0));
-			$this->redirect($this->getReferer());
-		}
-		
-		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_chesscompetition_games::published', 'alexf'))
-		{
-			return '';
-		}
-		
-		$href .= '&amp;id='.$this->Input->get('id').'&amp;tid='.$row['id'].'&amp;state='.$row[''];
-		
-		if (!$row['published'])
-		{
-			$icon = 'invisible.gif';
-		}
-		
-		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.$this->generateImage($icon, $label).'</a> ';
-	}
-
-	/**
-	 * Toggle the visibility of an element
-	 * @param integer
-	 * @param boolean
-	 */
-	public function toggleVisibility($intId, $blnPublished)
-	{
-		// Check permissions to publish
-		if (!$this->User->isAdmin && !$this->User->hasAccess('tl_chesscompetition_games::published', 'alexf'))
-		{
-			$this->log('Not enough permissions to show/hide record ID "'.$intId.'"', 'tl_chesscompetition_games toggleVisibility', TL_ERROR);
-			$this->redirect('contao/main.php?act=error');
-		}
-		
-		$this->createInitialVersion('tl_chesscompetition_games', $intId);
-		
-		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_chesscompetition_games']['fields']['published']['save_callback']))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_chesscompetition_games']['fields']['published']['save_callback'] as $callback)
-			{
-				$this->import($callback[0]);
-				$blnPublished = $this->$callback[0]->$callback[1]($blnPublished, $this);
-			}
-		}
-		
-		// Update the database
-		$this->Database->prepare("UPDATE tl_chesscompetition_games SET tstamp=". time() .", published='" . ($blnPublished ? '' : '1') . "' WHERE id=?")
-		     ->execute($intId);
-		$this->createNewVersion('tl_chesscompetition_games', $intId);
 	}
 
 }
